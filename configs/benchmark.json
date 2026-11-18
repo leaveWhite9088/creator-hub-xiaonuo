@@ -1,0 +1,153 @@
+{
+  "name": "creator-hub-xiaonuo",
+  "title": "创作者顾问工作台 · 异步联调竞态、去剧透约束与连环过关前端基准",
+  "version": "xiaonuo-v4.0",
+  "viewports": {
+    "desktop": { "width": 1440, "height": 900 },
+    "tablet": { "width": 768, "height": 1024 },
+    "mobile": { "width": 375, "height": 812 },
+    "mobile_narrow": { "width": 320, "height": 568 }
+  },
+  "content_requirements": {
+    "project_count": 4,
+    "article_count": 4,
+    "min_categories": 3,
+    "max_compare_items": 3,
+    "min_svg_axes": 3,
+    "min_schedule_slots": 4,
+    "article_cjk_len_nodes": [
+      [0, 0.0],
+      [240, 0.0],
+      [400, 6.0],
+      [500, 10.0],
+      [1050, 10.0],
+      [1600, 7.5]
+    ],
+    "contact_demo_email": "linche@example.com",
+    "message_min_len": 10,
+    "message_max_len": 500
+  },
+  "storyboard": {
+    "expected_panel_count": 12,
+    "desktop_viewport": { "width": 1440, "height": 900 },
+    "mobile_viewport": { "width": 375, "height": 812 },
+    "copy_feedback_delay_ms": 100
+  },
+  "scoring": {
+    "chain_gate": {
+      "enabled": true,
+      "pass_threshold": 0.55,
+      "broken_downstream_multiplier": 0.20
+    },
+    "A": {
+      "max": 30.0,
+      "a1_content_offline_max": 2.0,
+      "a2_search_filter_compare_max": 9.5,
+      "a3_estimator_persist_form_max": 12.0,
+      "a4_deeplink_history_toc_max": 6.5,
+      "external_req_penalty_nodes": [
+        [0, 10.0],
+        [1, 3.0],
+        [2, 0.0]
+      ]
+    },
+    "B": {
+      "max": 15.0,
+      "b1_max": 5.0,
+      "b2_max": 10.0,
+      "cap_a_ratio": 1.0,
+      "b2_free_min": 18.0,
+      "b2_halflife_min": 24.0,
+      "stress_injected_cards": 320,
+      "idle_raf_penalty_ratio": 0.40,
+      "b1_weights": {
+        "first_paint": 0.15,
+        "stress_search_latency": 0.45,
+        "stress_scroll_fps": 0.40
+      },
+      "first_paint_ms_nodes": [
+        [0, 10.0],
+        [280, 10.0],
+        [600, 7.0],
+        [1100, 3.0],
+        [1800, 0.0]
+      ],
+      "search_latency_ms_nodes": [
+        [0, 10.0],
+        [26, 10.0],
+        [58, 6.5],
+        [115, 2.5],
+        [210, 0.0]
+      ],
+      "scroll_frame_p95_ms_nodes": [
+        [0, 10.0],
+        [20, 10.0],
+        [34, 6.5],
+        [65, 2.5],
+        [110, 0.0]
+      ]
+    },
+    "C": {
+      "max": 25.0,
+      "c1_responsive_geometry_max": 9.0,
+      "c2_keyboard_a11y_max": 8.0,
+      "c3_resilience_contrast_max": 8.0,
+      "c1_weights": {
+        "viewport_and_clip": 3.0,
+        "long_word_stress": 2.5,
+        "dynamic_occlusion_overlap": 2.0,
+        "touch_and_margin": 1.5
+      },
+      "overflow_px_nodes": [
+        [0, 10.0],
+        [1, 8.0],
+        [6, 3.0],
+        [20, 0.0]
+      ],
+      "clipped_controls_nodes": [
+        [0, 10.0],
+        [1, 4.0],
+        [2, 1.0],
+        [3, 0.0]
+      ],
+      "mobile_margin_px_nodes": [
+        [0, 0.0],
+        [8, 2.5],
+        [14, 10.0]
+      ],
+      "touch_target_min_px": 34,
+      "touch_target_ideal_px": 38,
+      "fixed_bars_max_viewport_ratio": 0.28,
+      "c2_weights": {
+        "tab_reachability_6zones": 1.2,
+        "custom_focus_visible": 1.3,
+        "modal_trap_and_focus_return": 5.5
+      },
+      "c3_weights": {
+        "chaos_corrupted_storage": 1.0,
+        "quota_security_clipboard": 1.2,
+        "theme_pref_and_surfaces": 1.0,
+        "wcag_barrel_contrast": 4.8
+      },
+      "contrast_barrel_min_weight": 0.65,
+      "body_contrast_nodes": [
+        [1.0, 0.0],
+        [3.4, 0.0],
+        [4.0, 4.5],
+        [4.6, 10.0]
+      ],
+      "muted_contrast_nodes": [
+        [1.0, 0.0],
+        [2.9, 0.0],
+        [3.6, 4.5],
+        [4.3, 10.0]
+      ]
+    },
+    "D": {
+      "max": 30.0,
+      "d1_visual_flow_ux_max": 11.0,
+      "d2_workbench_micro_max": 10.0,
+      "d3_maintainability_honesty_max": 9.0
+    }
+  }
+}

@@ -1,0 +1,42 @@
+# 选手运行目录产物（过程与结果不进版本库，仅保留目录说明）
+runs/*
+!runs/README.md
+
+# 临时自检与调试目录
+tests/_tmp/
+out/
+.sessions/
+.dev/
+
+# Python 字节码缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 日志与临时文件
+*.log
+*.tmp
+
+# 盲评运行时产物：匿名包与私有映射不进版本库（仅保留目录说明与公开 scores/verdicts）
+leaderboard/blind/
+leaderboard/blind-maps/*
+!leaderboard/blind-maps/README.md
+leaderboard/archive/*/runs/
+leaderboard/archive/*/blind/
+leaderboard/archive/*/blind-maps/
+leaderboard/archive/*/reviews.jsonl
+leaderboard/archive/*/reviews.jsonl.lock
+leaderboard/archive/*/reviews.merged.json
+leaderboard/archive/*/runs_log.jsonl
+leaderboard/archive/*/runs_log.jsonl.lock
+*.draft.json
+
+# 中心化追加式评审日志、运行台账与聚合临时产物
+leaderboard/reviews.jsonl
+leaderboard/reviews.jsonl.lock
+leaderboard/reviews.merged.json
+leaderboard/runs_log.jsonl
+leaderboard/runs_log.jsonl.lock
+
+# 选手/评委临时辅助草稿与靶向补测截图（收尾前必须清空）
+draft/
