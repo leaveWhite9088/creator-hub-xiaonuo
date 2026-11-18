@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>林澈 · 独立 AI 应用研究与顾问工作台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="reading-progress-wrap" id="readingProgressWrap" aria-hidden="true">
+    <div class="reading-progress-bar" id="readingProgressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+  </div>
+
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <a href="#home" class="brand-link" id="brandHomeLink">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>林澈 · Studio</span>
+      </a>
+      <nav class="nav-actions" aria-label="主导航与工作台控制">
+        <a href="#projects-anchor" class="nav-link" id="navProjects">代表项目</a>
+        <a href="#estimator-anchor" class="nav-link" id="navEstimator">排期规划</a>
+        <a href="#articles-anchor" class="nav-link" id="navArticles">实测手记</a>
+        <a href="#contact-anchor" class="nav-link" id="navContact">合作咨询</a>
+        <div class="history-controls" role="group" aria-label="跨模块工作台历史">
+          <button
+            type="button"
+            class="btn btn-subtle btn-compact"
+            data-testid="workbench-undo"
+            id="workbenchUndoBtn"
+            disabled
+            aria-label="撤销上一步选型或规划操作（Ctrl+Z）"
+            title="撤销上一步对比或排期操作（Ctrl+Z）"
+          >
+            ↶ 撤销
+          </button>
+          <button
+            type="button"
+            class="btn btn-subtle btn-compact"
+            data-testid="workbench-redo"
+            id="workbenchRedoBtn"
+            disabled
+            aria-label="重做上一步选型或规划操作（Ctrl+Y）"
+            title="重做上一步对比或排期操作（Ctrl+Y）"
+          >
+            ↷ 重做
+          </button>
+        </div>
+        <button type="button" class="btn btn-subtle btn-compact" data-testid="theme-toggle" id="themeToggleBtn" aria-label="切换深浅色主题">
+          ☾ 深色
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="storageDegradeBanner" class="storage-warning hidden" role="status">
+      提示：当前浏览器环境限制了本地持久化存储，收藏、对比、排期与草稿已自动切换至会话内存模式平稳运行。
+    </div>
+
+    <div id="globalToast" class="toast-notice hidden" role="status" aria-live="polite"></div>
+
+    <!-- 主工作台与列表视图 -->
+    <div id="homeView">
+      <section class="hero-section" data-testid="hero-section">
+        <div class="hero-grid">
+          <div>
+            <p class="hero-eyebrow" id="heroLocation">中国 · 杭州</p>
+            <h1 class="hero-title" id="heroTitle">林澈 — 独立 AI 应用研究与顾问</h1>
+            <p class="hero-tagline" id="heroTagline">正在连接本地顾问工作台服务…</p>
+            <p class="hero-bio" id="heroBio"></p>
+          </div>
+          <div class="hero-metrics" id="heroMetrics"></div>
+        </div>
+        <div class="demo-banner" data-testid="demo-notice" id="demoNotice">演示说明加载中…</div>
+      </section>
+
+      <!-- 全文检索、分类筛选与排序面板 -->
+      <section class="toolbar-panel" aria-label="全文搜索、分类筛选与排序">
+        <div class="search-row">
+          <div class="search-input-wrap">
+            <input
+              type="search"
+              class="search-input"
+              data-testid="search-input"
+              id="searchInput"
+              placeholder="全文检索项目与长文（支持空格分词交集，如“状态机 回放树”或“回归门禁”）..."
+              aria-label="全文搜索项目与长文"
+            />
+            <button type="button" class="clear-search-btn hidden" id="clearSearchBtn" aria-label="清空搜索词">清空 ×</button>
+          </div>
+
+          <div class="toolbar-controls">
+            <button type="button" class="btn" data-testid="favorite-filter" id="favFilterBtn" aria-pressed="false">
+              ☆ 只看已收藏（0）
+            </button>
+            <label class="sort-wrap" for="sortControl">
+              <span class="sort-label">排序</span>
+              <select class="sort-select" data-testid="sort-control" id="sortControl" aria-label="列表排序方式"></select>
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <div class="category-group" data-testid="category-filter" id="categoryFilter" role="group" aria-label="按业务方向筛选项目"></div>
+        </div>
+
+        <div class="filter-status-bar" id="filterStatusBar" aria-live="polite"></div>
+      </section>
+
+      <!-- 最近浏览快捷轨迹 -->
+      <div id="recentTray" class="recent-tray hidden" aria-label="最近浏览记录"></div>
+
+      <!-- 搜索/筛选无匹配友好恢复区 -->
+      <div class="empty-panel hidden" data-testid="empty-state" id="emptyState">
+        <h2 class="empty-title" id="emptyTitle">没有找到匹配的项目或长文</h2>
+        <p class="empty-desc" id="emptyDesc"></p>
+        <div class="empty-actions" id="emptyActions"></div>
+      </div>
+
+      <!-- 代表项目区 -->
+      <section class="section-block" id="projects-anchor">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">代表项目与工具演示</h2>
+            <p class="section-desc">支持勾选最多 3 项加入底部对比篮，打开多维能力雷达图与结构化对照表。</p>
+          </div>
+          <span class="section-sub" id="projectCountHint"></span>
+        </div>
+        <div class="project-grid" data-testid="project-list" id="projectList"></div>
+      </section>
+
+      <!-- 交互工作台：顾问合作范围、里程碑与排期规划台 -->
+      <section class="section-block" id="estimator-anchor" data-testid="estimator-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">顾问合作范围、阶段里程碑与近期档期规划台</h2>
+            <p class="section-desc">实时调用本地测算服务评估周期、预算区间与分阶段交付表；自动校验 14 周忙闲排期并提供冲突顺延建议，支持与对比项目合并带入咨询单。</p>
+          </div>
+          <span class="badge">异步耦合工作台</span>
+        </div>
+
+        <div class="estimator-grid">
+          <div class="estimator-controls">
+            <div class="est-group">
+              <div class="est-group-title">1. 选择基础合作模式</div>
+              <div class="est-type-grid" id="estTypeGroup" role="radiogroup" aria-label="基础合作模式"></div>
+            </div>
+
+            <div class="est-group">
+              <div class="est-group-title">2. 叠加可选交付模块（可多选）</div>
+              <div class="est-addon-grid" id="estAddonGroup" role="group" aria-label="可选交付模块"></div>
+            </div>
+
+            <div class="est-group">
+              <div class="est-group-title">3. 业务链路规模与复杂度系数</div>
+              <div class="est-scale-group" data-testid="est-scale" id="estScaleGroup" role="group" aria-label="复杂度系数"></div>
+            </div>
+
+            <div class="est-group">
+              <div class="est-group-title">4. 选择期望启动周（自动核对林澈近期忙闲日历）</div>
+              <div class="est-week-grid" data-testid="est-start-week" id="estStartWeekGroup" role="radiogroup" aria-label="期望启动档期"></div>
+            </div>
+          </div>
+
+          <aside class="estimator-summary-card" id="estimatorSummaryCard" aria-live="polite">
+            <div class="est-summary-eyebrow">实时测算与阶段里程碑（演示参考）</div>
+            <div data-testid="est-result" id="estResultBox" class="est-result-box">正在同步初始排期测算…</div>
+
+            <div id="plannerConflictBanner" class="est-conflict-box hidden" role="alert">
+              <div class="est-conflict-text" id="plannerConflictText"></div>
+              <button type="button" class="btn btn-conflict-resolve" id="plannerShiftFreeWeekBtn">
+                顺延至最近连续空闲档期 →
+              </button>
+            </div>
+
+            <div class="est-milestones-wrap">
+              <div class="est-milestones-heading">分阶段交付里程碑排期</div>
+              <ol class="est-milestones-list" data-testid="est-milestones" id="estMilestonesBox"></ol>
+            </div>
+
+            <div class="est-summary-actions">
+              <button type="button" class="btn btn-primary" data-testid="est-apply-to-contact" id="estApplyBtn">
+                一键带入合作留言 ↓
+              </button>
+              <button type="button" class="btn" data-testid="est-reset" id="estResetBtn">
+                重置默认配置
+              </button>
+            </div>
+            <p class="est-footnote" id="estHandoffFeedback" role="status" aria-live="polite"></p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 深度实测长文区 -->
+      <section class="section-block" id="articles-anchor">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">实测与工程复盘手记</h2>
+            <p class="section-desc">记录私有评测基准、异步竞态治理与独立研究工具的一线观察。</p>
+          </div>
+          <span class="section-sub" id="articleCountHint"></span>
+        </div>
+        <div class="article-stack" data-testid="article-list" id="articleList"></div>
+      </section>
+
+      <!-- 合作咨询提交与回执区 -->
+      <section class="section-block" id="contact-anchor" data-testid="contact-section">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">合作咨询登记与结构化回执</h2>
+            <p class="section-desc">通过本地模拟网关校验排期并签发咨询回执单（零外网上传）；遇到瞬时繁忙自动保护已填草稿不丢失。</p>
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-direct-row">
+            <span>直通邮箱：<strong id="contactEmailText">linche@example.com</strong></span>
+            <span class="badge" id="contactEmailNote">演示占位邮箱</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="field-group">
+              <div class="field-label-row">
+                <label for="contactName">您的姓名 / 团队称呼</label>
+              </div>
+              <input type="text" class="form-control" id="contactName" data-testid="contact-name" placeholder="例如：陈工 / 某智能硬件团队" />
+              <div class="field-error hidden" id="errName" data-testid="contact-error"></div>
+            </div>
+
+            <div class="field-group">
+              <div class="field-label-row">
+                <label for="contactEmail">回复邮箱</label>
+              </div>
+              <input type="email" class="form-control" id="contactEmail" data-testid="contact-email" placeholder="name@company.com" />
+              <div class="field-error hidden" id="errEmail" data-testid="contact-error"></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label-row">
+              <label for="contactMessage">合作背景与交流需求（10～500 字）</label>
+              <span class="char-counter" id="charCounter">当前 0 / 500 字（至少 10 字）</span>
+            </div>
+            <textarea
+              class="form-control"
+              id="contactMessage"
+              data-testid="contact-message"
+              placeholder="请简述当前的业务场景、遇到的评测或智能体痛点，也可从上方规划台一键合并带入已选方案..."
+            ></textarea>
+            <div class="field-error hidden" id="errMessage" data-testid="contact-error"></div>
+          </div>
+
+          <div id="contactServiceBanner" class="transient-retry-box hidden" role="alert">
+            <span id="contactServiceBannerText"></span>
+            <button type="button" class="btn btn-compact" id="contactRetryNowBtn">立即重试提交</button>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary" data-testid="contact-submit" id="contactSubmitBtn">
+              提交咨询并生成回执
+            </button>
+            <button type="button" class="btn hidden" data-testid="contact-copy" id="contactCopyBtn">
+              复制回执全文
+            </button>
+            <button type="button" class="btn" id="contactClearDraftBtn">清空草稿</button>
+            <span class="copy-status" id="copyStatusLive" role="status" aria-live="polite"></span>
+          </div>
+
+          <div class="output-panel hidden" id="contactOutputPanel">
+            <label for="contactReceiptArea" class="output-label">
+              已签发的结构化咨询回执单（可直接复制发往邮件或即时通讯工具）：
+            </label>
+            <textarea readonly class="output-textarea" id="contactReceiptArea" data-testid="contact-receipt"></textarea>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 项目详情 / 长文沉浸阅读视图 -->
+    <section id="detailView" data-testid="detail-view" class="detail-view hidden" aria-live="polite">
+      <div class="detail-topbar">
+        <button type="button" class="btn" data-testid="detail-back" id="detailBackBtn">
+          ← 返回原浏览位置
+        </button>
+        <div id="detailActionGroup" class="detail-action-group"></div>
+      </div>
+
+      <div class="detail-layout" id="detailLayout">
+        <article class="detail-article-card">
+          <div class="card-meta" id="detailMeta"></div>
+          <h1 class="detail-title" data-testid="detail-title" id="detailTitle"></h1>
+          <div class="prose" data-testid="detail-body" id="detailBody"></div>
+
+          <div class="article-pager hidden" id="articlePager">
+            <button type="button" class="btn" data-testid="article-prev" id="articlePrevBtn">← 上一篇</button>
+            <button type="button" class="btn" data-testid="article-next" id="articleNextBtn">下一篇 →</button>
+          </div>
+        </article>
+
+        <aside class="toc-sidebar hidden" data-testid="article-toc" id="articleToc" aria-label="文章章节目录">
+          <p class="toc-heading">本文目录 · 滚动自动定位</p>
+          <nav class="toc-list" id="articleTocList"></nav>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- 悬浮项目对比状态栏 -->
+  <aside id="compareBar" data-testid="compare-bar" class="compare-bar hidden" aria-label="项目横向对比篮">
+    <div class="compare-bar-inner">
+      <div class="compare-bar-info">
+        <strong id="compareBarTitle">已加入对比（0/3）</strong>
+        <div id="compareBarChips" class="compare-bar-chips"></div>
+      </div>
+      <div class="compare-bar-actions">
+        <button type="button" class="btn btn-primary" data-testid="compare-open" id="compareOpenBtn">
+          并排对比差异
+        </button>
+        <button type="button" class="btn" data-testid="compare-clear" id="compareClearBtn">
+          清空对比
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 模态横向对比面板（含零依赖 SVG 多维雷达图、结构化对照表、严格双向焦点锁与 Escape 归位） -->
+  <div id="compareBackdrop" class="compare-backdrop hidden">
+    <section
+      id="comparePanel"
+      data-testid="compare-panel"
+      class="compare-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="compareModalTitle"
+    >
+      <div class="compare-modal-header">
+        <div>
+          <h2 id="compareModalTitle" class="compare-modal-title">项目方案多维雷达与并排对比</h2>
+          <p class="compare-modal-sub">同屏叠加四维工程量化指标与核心交付物；按 Esc 键或点击右上角返回原位置。</p>
+        </div>
+        <div class="compare-modal-actions">
+          <button type="button" class="btn btn-primary" id="compareApplyContactBtn">将所选项目带入咨询</button>
+          <button type="button" class="btn" data-testid="compare-close" id="compareCloseBtn">关闭 ×</button>
+        </div>
+      </div>
+
+      <div class="compare-visual-box">
+        <div class="compare-chart-header">
+          <span class="compare-chart-title">四维工程能力叠加对比（0～100 量化分）</span>
+          <div id="compareChartLegend" class="compare-chart-legend"></div>
+        </div>
+        <svg
+          data-testid="compare-chart"
+          id="compareChartSvg"
+          class="compare-chart-svg"
+          viewBox="0 0 440 264"
+          role="img"
+          aria-label="已选项目多维能力对比雷达图"
+        ></svg>
+      </div>
+
+      <div class="table-scroll-wrap" id="compareTableWrap"></div>
+    </section>
+  </div>
+
+  <script src="mock_backend.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
