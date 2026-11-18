@@ -1,0 +1,79 @@
+{
+  "model": "minimax-m3.1-flash",
+  "model_inputs": [
+    "minimax-m3.1-flash"
+  ],
+  "finalized_at": "2026-11-14T21:33:19+08:00",
+  "blind_pack_ids": [
+    "a80729797606"
+  ],
+  "review_log": "E:\\easyz工作室\\评测产品\\creator-hub-xiaonuo\\leaderboard\\reviews.jsonl",
+  "d_source": "review_log",
+  "d_aggregate": "mean",
+  "summary": {
+    "runs_total": 1,
+    "runs_scored": 1,
+    "judge_reviews": 1
+  },
+  "runs": [
+    {
+      "run": "minimax-m3.1-flash",
+      "pack_id": "a80729797606",
+      "case_id": "case-01",
+      "judge_count": 1,
+      "code_commit": "dcf97c2eccd8",
+      "integrity_ok": true,
+      "not_implemented": false,
+      "firstPaintMs": 223.2,
+      "endToEndMin": 83.4,
+      "total_tokens": 106514,
+      "A": 28.0,
+      "B": 5.31,
+      "C": 23.94,
+      "D": 23.7,
+      "total": 80.95,
+      "A1": 6.0,
+      "A2": 8.0,
+      "A3": 6.0,
+      "A4": 8.0,
+      "B1": 4.67,
+      "B2": 0.64,
+      "C1": 7.94,
+      "C2": 8.0,
+      "C3": 8.0,
+      "D1": 8.1,
+      "D2": 7.6,
+      "D3": 8.0
+    }
+  ],
+  "mean": {
+    "A": 28.0,
+    "B": 5.31,
+    "C": 23.94,
+    "D": 23.7,
+    "total": 80.95,
+    "B1": 4.67,
+    "B2": 0.64,
+    "C1": 7.94,
+    "C2": 8.0,
+    "C3": 8.0,
+    "D1": 8.1,
+    "D2": 7.6,
+    "D3": 8.0
+  },
+  "range_half": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0,
+    "D": 0.0,
+    "total": 0.0,
+    "B1": 0.0,
+    "B2": 0.0,
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D1": 0.0,
+    "D2": 0.0,
+    "D3": 0.0
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "model": "deepseek-v4.1-flash-1017",
+  "model_inputs": [
+    "deepseek-v4.1-flash-1017"
+  ],
+  "finalized_at": "2026-11-14T21:32:19+08:00",
+  "blind_pack_ids": [
+    "1ea1b00e3cb2"
+  ],
+  "review_log": "E:\\easyz工作室\\评测产品\\creator-hub-xiaonuo\\leaderboard\\reviews.jsonl",
+  "d_source": "review_log",
+  "d_aggregate": "mean",
+  "summary": {
+    "runs_total": 1,
+    "runs_scored": 1,
+    "judge_reviews": 1
+  },
+  "runs": [
+    {
+      "run": "deepseek-v4.1-flash-1017",
+      "pack_id": "1ea1b00e3cb2",
+      "case_id": "case-01",
+      "judge_count": 1,
+      "code_commit": "fbaf078989c2",
+      "integrity_ok": true,
+      "not_implemented": false,
+      "firstPaintMs": 284.0,
+      "endToEndMin": 108.3,
+      "total_tokens": null,
+      "A": 29.02,
+      "B": 5.09,
+      "C": 20.92,
+      "D": 18.7,
+      "total": 73.73,
+      "A1": 6.0,
+      "A2": 8.0,
+      "A3": 8.0,
+      "A4": 7.02,
+      "B1": 4.84,
+      "B2": 0.25,
+      "C1": 4.92,
+      "C2": 8.0,
+      "C3": 8.0,
+      "D1": 5.8,
+      "D2": 5.7,
+      "D3": 7.2
+    }
+  ],
+  "mean": {
+    "A": 29.02,
+    "B": 5.09,
+    "C": 20.92,
+    "D": 18.7,
+    "total": 73.73,
+    "B1": 4.84,
+    "B2": 0.25,
+    "C1": 4.92,
+    "C2": 8.0,
+    "C3": 8.0,
+    "D1": 5.8,
+    "D2": 5.7,
+    "D3": 7.2
+  },
+  "range_half": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0,
+    "D": 0.0,
+    "total": 0.0,
+    "B1": 0.0,
+    "B2": 0.0,
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D1": 0.0,
+    "D2": 0.0,
+    "D3": 0.0
+  }
+}

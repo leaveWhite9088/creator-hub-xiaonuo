@@ -1,0 +1,80 @@
+{
+  "model": "kimi",
+  "model_inputs": [
+    "kimi",
+    "kimi-k3"
+  ],
+  "finalized_at": "2026-11-16T21:03:48+08:00",
+  "blind_pack_ids": [
+    "59584c8ef5f9"
+  ],
+  "review_log": "E:\\easyz工作室\\评测产品\\creator-hub-xiaonuo\\leaderboard\\reviews.jsonl",
+  "d_source": "review_log",
+  "d_aggregate": "mean",
+  "summary": {
+    "runs_total": 1,
+    "runs_scored": 1,
+    "judge_reviews": 1
+  },
+  "runs": [
+    {
+      "run": "kimi-k3",
+      "pack_id": "59584c8ef5f9",
+      "case_id": "case-01",
+      "judge_count": 1,
+      "code_commit": "ca46e645a1c4",
+      "integrity_ok": true,
+      "not_implemented": false,
+      "firstPaintMs": 96.6,
+      "endToEndMin": 16.1,
+      "total_tokens": null,
+      "A": 12.29,
+      "B": 6.15,
+      "C": 15.89,
+      "D": 14.8,
+      "total": 49.13,
+      "A1": 1.92,
+      "A2": 1.92,
+      "A3": 2.7,
+      "A4": 5.75,
+      "B1": 2.05,
+      "B2": 4.1,
+      "C1": 4.2,
+      "C2": 5.69,
+      "C3": 6.0,
+      "D1": 4.8,
+      "D2": 3.8,
+      "D3": 6.2
+    }
+  ],
+  "mean": {
+    "A": 12.29,
+    "B": 6.15,
+    "C": 15.89,
+    "D": 14.8,
+    "total": 49.13,
+    "B1": 2.05,
+    "B2": 4.1,
+    "C1": 4.2,
+    "C2": 5.69,
+    "C3": 6.0,
+    "D1": 4.8,
+    "D2": 3.8,
+    "D3": 6.2
+  },
+  "range_half": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0,
+    "D": 0.0,
+    "total": 0.0,
+    "B1": 0.0,
+    "B2": 0.0,
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D1": 0.0,
+    "D2": 0.0,
+    "D3": 0.0
+  }
+}

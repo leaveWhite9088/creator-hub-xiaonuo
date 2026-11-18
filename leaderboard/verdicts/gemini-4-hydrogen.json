@@ -1,0 +1,79 @@
+{
+  "model": "gemini-4-hydrogen",
+  "model_inputs": [
+    "gemini-4-hydrogen"
+  ],
+  "finalized_at": "2026-11-16T21:01:41+08:00",
+  "blind_pack_ids": [
+    "3fd6d682a18f"
+  ],
+  "review_log": "E:\\easyz工作室\\评测产品\\creator-hub-xiaonuo\\leaderboard\\reviews.jsonl",
+  "d_source": "review_log",
+  "d_aggregate": "mean",
+  "summary": {
+    "runs_total": 1,
+    "runs_scored": 1,
+    "judge_reviews": 1
+  },
+  "runs": [
+    {
+      "run": "gemini-4-hydrogen",
+      "pack_id": "3fd6d682a18f",
+      "case_id": "case-01",
+      "judge_count": 1,
+      "code_commit": "45286871a5fc",
+      "integrity_ok": true,
+      "not_implemented": false,
+      "firstPaintMs": 124.8,
+      "endToEndMin": 22.1,
+      "total_tokens": null,
+      "A": 10.76,
+      "B": 5.38,
+      "C": 19.21,
+      "D": 25.3,
+      "total": 60.65,
+      "A1": 1.92,
+      "A2": 2.0,
+      "A3": 3.65,
+      "A4": 3.19,
+      "B1": 1.79,
+      "B2": 3.59,
+      "C1": 5.25,
+      "C2": 6.9,
+      "C3": 7.06,
+      "D1": 9.4,
+      "D2": 7.8,
+      "D3": 8.1
+    }
+  ],
+  "mean": {
+    "A": 10.76,
+    "B": 5.38,
+    "C": 19.21,
+    "D": 25.3,
+    "total": 60.65,
+    "B1": 1.79,
+    "B2": 3.59,
+    "C1": 5.25,
+    "C2": 6.9,
+    "C3": 7.06,
+    "D1": 9.4,
+    "D2": 7.8,
+    "D3": 8.1
+  },
+  "range_half": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0,
+    "D": 0.0,
+    "total": 0.0,
+    "B1": 0.0,
+    "B2": 0.0,
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D1": 0.0,
+    "D2": 0.0,
+    "D3": 0.0
+  }
+}
