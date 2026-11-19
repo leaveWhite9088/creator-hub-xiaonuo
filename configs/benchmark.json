@@ -145,9 +145,9 @@
     },
     "D": {
       "max": 30.0,
-      "d1_visual_flow_ux_max": 11.0,
+      "d1_visual_flow_ux_max": 10.0,
       "d2_workbench_micro_max": 10.0,
-      "d3_maintainability_honesty_max": 9.0
+      "d3_maintainability_honesty_max": 10.0
     }
   }
 }

@@ -48,7 +48,7 @@ def main() -> int:
     print(f"原始记录 {len(reviews)} 条；按 (pack_id, case_id, judge_id) 去重后 {len(used)} 条；旧重复 {duplicates} 条")
     print(f"聚合口径：{args.aggregate}；匿名案例数：{len(groups)}")
     print("")
-    print(f"{'pack_id':<16}{'case':<10}{'评委数':>6}{'D1(11)':>9}{'D2(10)':>9}{'D3(9)':>9}{'D总(30)':>9}")
+    print(f"{'pack_id':<16}{'case':<10}{'评委数':>6}{'D1(10)':>9}{'D2(10)':>9}{'D3(10)':>9}{'D总(30)':>9}")
     print("-" * 68)
     for g in groups:
         print(

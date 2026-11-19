@@ -69,7 +69,7 @@ try {
         --pack-dir $stubPackDir --case-id case-01 `
         --judge-id judge-alpha --judge-model claude-opus `
         --D1 0.0 --D2 0.0 --D3 0.5 `
-        --evidence "[S01-S12] 仍保留初始未实现占位页，DECISIONS.md 未填写" `
+        --evidence "[S01-S12] 仍保留初始未实现占位页" `
         --note "未进行任何前端开发，按红线封顶" `
         --review-log $ReviewLog
     if ($LASTEXITCODE -ne 0) { throw "EmptyStub judge_submit 失败" }
@@ -141,8 +141,8 @@ try {
     python src/scoring/judge_submit.py `
         --pack-dir $goldPackDir --case-id case-01 `
         --judge-id judge-alpha --judge-model claude-opus `
-        --D1 10.5 --D2 9.5 --D3 8.5 `
-        --evidence "[S01][S02] Y1=Y2精准恢复 + [S03] 零重叠动态SVG雷达图 + [S07][S08] 14周连续空闲顺延 + [S09][S10] 非破坏带入与503自动退避回执生成 + [code/app.js] C1-C5全核实" `
+        --D1 9.5 --D2 9.5 --D3 9.5 `
+        --evidence "[S01][S02] Y1=Y2精准恢复 + [S03] 零重叠动态SVG雷达图 + [S07][S08] 14周连续空闲顺延 + [S09][S10] 非破坏带入与503自动退避回执生成 + [code/app.js] 架构高内聚" `
         --note "手机窄屏下目录位于正文上方，超多小节长文时可增加折叠收起开关" `
         --review-log $ReviewLog
     if ($LASTEXITCODE -ne 0) { throw "GoldenModel 评委1 提交失败" }
@@ -151,7 +151,7 @@ try {
     python src/scoring/judge_submit.py `
         --pack-dir $goldPackDir --case-id case-01 `
         --judge-id judge-alpha --judge-model claude-opus `
-        --D1 10.0 --D2 9.0 --D3 8.0 `
+        --D1 9.0 --D2 9.0 --D3 9.0 `
         --evidence "[S01] 重复提交防重拦截验证" `
         --note "重复提交应被拒绝" `
         --review-log $ReviewLog > $null 2>&1
@@ -162,7 +162,7 @@ try {
     python src/scoring/judge_submit.py `
         --pack-dir $goldPackDir --case-id case-01 `
         --judge-id judge-beta --judge-model gemini-pro `
-        --D1 10.0 --D2 9.5 --D3 8.5 `
+        --D1 9.5 --D2 9.5 --D3 9.0 `
         --evidence "[S02][S08][S10] 滚动记忆、AbortController并发锁、IME拼字保护与503退避完备 + [code/app.js] 工程结构解耦清晰" `
         --note "搜索命中高亮仅作用于列表摘要与标签，未展示正文上下文摘录片段" `
         --review-log $ReviewLog

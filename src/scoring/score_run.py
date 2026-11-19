@@ -26,11 +26,14 @@ except Exception:
     pass
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(ROOT / "tools"))
 
 import browser_waves  # noqa: E402
 import metrics  # noqa: E402
 from model_identity import canonical_model_id  # noqa: E402
+from start_run import compute_env_commit, compute_workspace_sha256  # noqa: E402
 
 
 def _render_audit_markdown(run_name: str, model_id: str, scores: dict, report: dict, eval_sec: float) -> str:
@@ -128,9 +131,20 @@ def main() -> int:
     report, trace = browser_waves.evaluate_workspace(ws_dir, cfg=cfg)
     eval_sec = round(time.perf_counter() - t0, 2)
 
+    env_commit = compute_env_commit(ROOT)
+    code_sha256 = compute_workspace_sha256(ws_dir)
+    scored_at = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
+
+    report["env_commit"] = env_commit
+    report["code_sha256"] = code_sha256
+    report["scored_at"] = scored_at
+
     scores = metrics.compute_scores(report, timing=timing, cfg=cfg)
     scores["run_name"] = rdir.name
     scores["model_id"] = model_id
+    scores["env_commit"] = env_commit
+    scores["code_sha256"] = code_sha256
+    scores["scored_at"] = scored_at
     scores["endToEndSeconds"] = timing.get("endToEndSeconds")
     scores["eval_duration_sec"] = eval_sec
 

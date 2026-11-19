@@ -24,16 +24,23 @@ def main() -> int:
     ap.add_argument("--case-id", required=True, help="包内案例编号，如 case-01")
     ap.add_argument("--judge-id", required=True, help="评委唯一标识（同一评委对不同包/案例保持一致）")
     ap.add_argument("--judge-model", required=True, help="评委模型或姓名标识，如 claude-opus-4")
-    ap.add_argument("--D1", type=float, required=True, help="D1 寻找、对比与阅读心流体验（0–11 分）")
-    ap.add_argument("--D2", type=float, required=True, help="D2 容错引导与微交互体贴度（0–10 分）")
-    ap.add_argument("--D3", type=float, required=True, help="D3 状态组织、可维护性与交付诚实度（0–9 分）")
+    ap.add_argument("--D1", type=float, required=True, help="D1 视觉设计质感与信息层级（0–10 分）")
+    ap.add_argument("--D2", type=float, required=True, help="D2 开放痛点的自发交互巧思（0–10 分）")
+    ap.add_argument("--D3", type=float, required=True, help="D3 代码简洁度、高内聚架构与工程质量（0–10 分）")
     ap.add_argument(
         "--evidence",
         required=True,
-        help="必须引用连环画截图编号（如 [S01] [S06]）及源码文件行号/DECISIONS 核验结论",
+        help="必须引用连环画截图编号（如 [S01] [S06]）及源码文件行号/函数名证据",
     )
     ap.add_argument("--note", required=True, help="必须指出该作品的最强反证/最大交互或工程短板")
     ap.add_argument("--review-log", default=str(review_log.DEFAULT_LOG), help="中心评审日志路径")
+    ap.add_argument(
+        "--overwrite",
+        "--update",
+        dest="overwrite",
+        action="store_true",
+        help="允许同一评委对该案例重评更新（追加新记录，汇总出榜时自动采信最新一条）",
+    )
     args = ap.parse_args()
 
     pack_dir = Path(args.pack_dir).resolve()
@@ -76,7 +83,7 @@ def main() -> int:
         "note": note_str,
     }
     try:
-        saved = review_log.append_review(args.review_log, rec, reject_duplicate=True)
+        saved = review_log.append_review(args.review_log, rec, reject_duplicate=not args.overwrite)
     except review_log.DuplicateReviewError as e:
         print("提交失败：" + str(e))
         return 2

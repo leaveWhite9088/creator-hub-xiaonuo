@@ -54,7 +54,7 @@ DEFAULT_SCORES_HEADER = """# 排行榜 · creator-hub-xiaonuo
 
 ## 计分结构（满分 100）
 
-`A30（A1后端校验与首屏保底 2.0 + A2乱序检索与SVG多维对比链 9.5 + A3异步报价冲突消解与503恢复链 12.0 + A4异步双深链与防竞态历史栈链 6.5） + B15（B1高压性能 5 + B2开发耗时 10，按 A 得分率封顶） + C25（C1反截断几何 9 + C2双向弹层焦点锁 8 + C3混沌容错与AA木桶对比度 8） + D30（D1排版与SVG对比美学 11 + D2异步过渡与冲突/503体贴恢复 10 + D3竞态控制与工程诚实度 9）`
+`A30（A1后端校验与首屏保底 2.0 + A2乱序检索与SVG多维对比链 9.5 + A3异步报价冲突消解与503恢复链 12.0 + A4异步双深链与防竞态历史栈链 6.5） + B15（B1高压性能 5 + B2开发耗时 10，按 A 得分率封顶） + C25（C1反截断几何 9 + C2双向弹层焦点锁 8 + C3混沌容错与AA木桶对比度 8） + D30（D1视觉设计质感与信息层级 10 + D2开放痛点的自发交互巧思 10 + D3代码简洁度与高内聚架构 10）`
 
 ---
 """
@@ -69,6 +69,38 @@ def _agg(rows: list[dict], key: str) -> tuple[float | None, float | None]:
     if not vals:
         return None, None
     return round(statistics.mean(vals), 2), round((max(vals) - min(vals)) / 2.0, 2)
+
+
+REQUIRED_OBJECTIVE_FILES = ("评分.json", "result.json", "audit_report.md", "wave_trace.jsonl")
+
+
+def can_reuse_objective_cache(
+    rdir: Path,
+    expected_env_commit: str,
+    expected_code_sha256: str,
+) -> tuple[bool, dict | None, str]:
+    """核验单局运行目录中的已定稿客观分是否满足双指纹（env_commit + code_sha256）防篡改缓存复用条件。"""
+    for fn in REQUIRED_OBJECTIVE_FILES:
+        if not (rdir / fn).is_file():
+            return False, None, f"缺少客观留档文件 {fn}"
+    try:
+        sc = json.loads((rdir / "评分.json").read_text(encoding="utf-8"))
+    except Exception as e:
+        return False, None, f"评分.json 读取异常: {e}"
+    if not isinstance(sc, dict):
+        return False, None, "评分.json 格式非法"
+    rec_env = sc.get("env_commit")
+    rec_code = sc.get("code_sha256")
+    if not rec_env or not rec_code:
+        return False, None, "评分.json 缺少 env_commit 或 code_sha256 校验指纹"
+    if rec_env != expected_env_commit:
+        return False, None, "env_commit 已变更（评分配置或评测脚本发生更新）"
+    if rec_code != expected_code_sha256:
+        return False, None, "code_sha256 已变更（该局交付物快照发生变动）"
+    for k in ("A_outcome", "B_efficiency", "C_quality", "total_objective_70"):
+        if not isinstance(sc.get(k), (int, float)):
+            return False, None, f"评分.json 缺少有效得分字段 {k}"
+    return True, sc, "双指纹校验通过，直接复用已定稿客观分"
 
 
 def main() -> int:
@@ -87,6 +119,13 @@ def main() -> int:
     ap.add_argument("--verdicts-dir", default=str(ROOT / "leaderboard" / "verdicts"))
     ap.add_argument("--runs-log", default=None)
     ap.add_argument("--allow-partial", action="store_true", help="允许仅汇总已有足够评委打分的 run")
+    ap.add_argument(
+        "--rescore",
+        "--force-rescore",
+        dest="rescore",
+        action="store_true",
+        help="强制重跑无头浏览器客观评测（忽略已缓存的定稿客观分）",
+    )
     ap.add_argument("--skip-integrity", action="store_true", help="跳过 env_commit/code_sha256 哈希核验（仅限本地调试）")
     ap.add_argument("--dry-run", action="store_true", help="只打印成绩表，不改写 scores.md 与 verdicts")
     args = ap.parse_args()
@@ -149,7 +188,7 @@ def main() -> int:
             blines = [
                 "## 大榜（按各模型总分均值排名）",
                 "",
-                "| 排名 | 模型 | 总分(100) | A主干(30) | B1性能(5) | B2耗时(10) | C1几何(9) | C2键盘(8) | C3容错对比(8) | D1心流(11) | D2体贴(10) | D3可维护(9) | 首屏(ms) | 开发(分) | 已评run |",
+                "| 排名 | 模型 | 总分(100) | A主干(30) | B1性能(5) | B2耗时(10) | C1几何(9) | C2键盘(8) | C3容错对比(8) | D1视觉(10) | D2巧思(10) | D3代码(10) | 首屏(ms) | 开发(分) | 已评run |",
                 "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
             ]
             for idx, v in enumerate(board, 1):
@@ -378,20 +417,34 @@ def main() -> int:
                 errors.append(f"{name}: workspace/mock_backend.js 缺失或遭到篡改（违反只读后端纪律，成绩作废）")
                 continue
 
-        # 正式拉起三波无头浏览器剧本定稿 A/B/C！
-        rr = subprocess.run(
-            [sys.executable, str(HERE / "score_run.py"), str(rdir), model_id, "--no-record"],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
+        target_code_sha = frozen_sha or actual_sha
+        cache_ok, cached_sc, cache_msg = (
+            (False, None, "显式指定 --rescore 强制重算")
+            if args.rescore
+            else can_reuse_objective_cache(rdir, current_env, target_code_sha)
         )
-        if rr.returncode != 0 or not (rdir / "评分.json").exists():
-            tail = (((rr.stdout or "") + "\n" + (rr.stderr or "")).strip())[-500:]
-            errors.append(f"{name}: score_run.py 执行失败：{tail}")
-            continue
-
-        sc = json.loads((rdir / "评分.json").read_text(encoding="utf-8"))
+        if cache_ok and cached_sc is not None:
+            sc = cached_sc
+            obj_source = "cached"
+            print(
+                f"  [客观分缓存复用] {name}: {cache_msg} "
+                f"(A={sc['A_outcome']:.2f}, B={sc['B_efficiency']:.2f}, C={sc['C_quality']:.2f})"
+            )
+        else:
+            print(f"  [客观分现场评测] {name}: {cache_msg}，正在拉起三波无头浏览器剧本...")
+            rr = subprocess.run(
+                [sys.executable, str(HERE / "score_run.py"), str(rdir), model_id, "--no-record"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if rr.returncode != 0 or not (rdir / "评分.json").exists():
+                tail = (((rr.stdout or "") + "\n" + (rr.stderr or "")).strip())[-500:]
+                errors.append(f"{name}: score_run.py 执行失败：{tail}")
+                continue
+            sc = json.loads((rdir / "评分.json").read_text(encoding="utf-8"))
+            obj_source = "fresh"
         tok = {}
         tok_path = rdir / "token_usage.json"
         if tok_path.exists():
@@ -417,6 +470,8 @@ def main() -> int:
                 "case_id": cid,
                 "judge_count": j_cnt,
                 "code_commit": (frozen_sha or actual_sha)[:12],
+                "env_commit": (sc.get("env_commit") or current_env)[:12],
+                "objective_source": obj_source,
                 "integrity_ok": bool(env_ok and code_ok and mock_ok),
                 "not_implemented": bool(sc.get("not_implemented")),
                 "firstPaintMs": bd.get("first_paint_ms"),
@@ -467,7 +522,7 @@ def main() -> int:
     lines = [
         f"\n### 最终成绩 · {model_id} — {datetime.datetime.now():%Y-%m-%d %H:%M}",
         "",
-        "| 运行批次 | 代码承诺 | 首屏(ms) | 开发(分) | A主干(30) | B1性能(5) | B2耗时(10) | C1几何(9) | C2键盘(8) | C3容错对比(8) | D1心流(11) | D2体贴(10) | D3可维护(9) | 评委数 | 总分(100) | 完整性 |",
+        "| 运行批次 | 代码承诺 | 首屏(ms) | 开发(分) | A主干(30) | B1性能(5) | B2耗时(10) | C1几何(9) | C2键盘(8) | C3容错对比(8) | D1视觉(10) | D2巧思(10) | D3代码(10) | 评委数 | 总分(100) | 完整性 |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for r in rows:

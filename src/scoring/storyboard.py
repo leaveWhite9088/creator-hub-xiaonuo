@@ -943,7 +943,7 @@ def render_storyboard_markdown(case_id: str, sb_data: dict) -> str:
         "> **阅读说明（给独立评委）**：",
         f"> 1. 以下 **{n_p} 张关键视觉与异步工作台交互状态截图（`[S01]`–`[S{n_p:02d}]`）** 由官方打包脚本在完全断网的无头浏览器中对接只读 `mock_backend.js` 按统一剧本自动抓拍；",
         "> 2. 图下批注**仅记录实测物理数值、SVG 包围盒与接口调用事实，不包含任何机器打分或优劣定性**；",
-        "> 3. 请务必**逐张查看 `storyboard/` 下的真实画面**，结合 `code/` 源码与 `DECISIONS.md` 对 D1、D2、D3 独立定级；若需验证额外交互，可调用 `python tools/judge_probe.py --case-dir <本case目录> ...` 靶向补测。",
+        "> 3. 请务必**逐张查看 `storyboard/` 下的真实画面**，结合 `code/` 源码对 D1（10分）、D2（10分）、D3（10分）独立定级；若需验证额外交互，可调用 `python tools/judge_probe.py --case-dir <本case目录> ...` 靶向补测。",
         "",
     ]
     if sb_data.get("is_unimplemented_stub"):

@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src" / "scoring"))
 sys.path.insert(0, str(ROOT / "tools"))
 
+import finalize  # noqa: E402
 import isolation_audit  # noqa: E402
 import metrics  # noqa: E402
 from model_identity import canonical_model_id, matches_batch_run, sanitize_run_name  # noqa: E402
@@ -175,8 +176,8 @@ class TestScoringAndInfra(unittest.TestCase):
                 json.dumps({"model": "SecretModelX", "model_id": "secretmodelx", "pack_id": "pack99", "cases": {"case-01": {"run": "SecretModelX-s1"}}}),
                 encoding="utf-8",
             )
-            (pdir / "case-01" / "DECISIONS.md").write_text("由 SecretModelX 生成，total_objective_70=68", encoding="utf-8")
             (pdir / "case-01" / "code").mkdir(parents=True, exist_ok=True)
+            (pdir / "case-01" / "code" / "app.js").write_text("// 由 SecretModelX 生成，total_objective_70=68", encoding="utf-8")
             (pdir / "case-01" / "code" / "mock_backend.js").write_text("// tampered mock backend", encoding="utf-8")
             rep = isolation_audit.audit_isolation(
                 runs_dir=tmp / "runs",
@@ -190,6 +191,56 @@ class TestScoringAndInfra(unittest.TestCase):
             self.assertIn("泄露模型或运行身份标识", joined)
             self.assertIn("total_objective_70", joined)
             self.assertIn("mock_backend.js 缺失或与官方只读原件不一致", joined)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    def test_objective_cache_fingerprint_and_live_blind_overwrite(self):
+        tmp = Path(tempfile.mkdtemp(prefix="ch_cache_"))
+        try:
+            rdir = tmp / "demo-s1"
+            rdir.mkdir(parents=True)
+            for fn in ("result.json", "audit_report.md", "wave_trace.jsonl"):
+                (rdir / fn).write_text("ok", encoding="utf-8")
+            (rdir / "评分.json").write_text(
+                json.dumps(
+                    {
+                        "env_commit": "env_hash_v1",
+                        "code_sha256": "code_hash_v1",
+                        "A_outcome": 20.0,
+                        "B_efficiency": 8.0,
+                        "C_quality": 19.0,
+                        "total_objective_70": 47.0,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            # 1. 双指纹完全匹配时可直接复用客观分缓存
+            ok, sc, _ = finalize.can_reuse_objective_cache(rdir, "env_hash_v1", "code_hash_v1")
+            self.assertTrue(ok)
+            self.assertEqual(sc["total_objective_70"], 47.0)
+
+            # 2. 评分脚本/配置指纹变动或交付物快照哈希变动时必须拒绝缓存
+            ok_env, _, _ = finalize.can_reuse_objective_cache(rdir, "env_hash_v2", "code_hash_v1")
+            self.assertFalse(ok_env)
+            ok_code, _, _ = finalize.can_reuse_objective_cache(rdir, "env_hash_v1", "code_hash_v2")
+            self.assertFalse(ok_code)
+
+            # 3. 盲评支持重评更新（reject_duplicate=False）且聚合实时取最新打分
+            log_p = tmp / "reviews.jsonl"
+            review_log.append_review(
+                log_p,
+                {"judge_id": "j1", "judge_model": "m", "pack_id": "p1", "case_id": "case-01", "D1": 7.0, "D2": 7.0, "D3": 7.0},
+                reject_duplicate=True,
+            )
+            review_log.append_review(
+                log_p,
+                {"judge_id": "j1", "judge_model": "m", "pack_id": "p1", "case_id": "case-01", "D1": 9.0, "D2": 9.5, "D3": 9.0},
+                reject_duplicate=False,
+            )
+            used, dups = review_log.dedupe_latest(review_log.read_reviews(log_p))
+            self.assertEqual(dups, 1)
+            agg = review_log.aggregate_reviews(used, mode="mean")
+            self.assertEqual(agg[0]["D"], 27.5)
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
 
