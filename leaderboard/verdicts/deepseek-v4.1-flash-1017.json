@@ -3,7 +3,7 @@
   "model_inputs": [
     "deepseek-v4.1-flash-1017"
   ],
-  "finalized_at": "2026-11-16T21:01:04+08:00",
+  "finalized_at": "2026-11-19T10:01:59+08:00",
   "blind_pack_ids": [
     "3b42ca958975"
   ],
@@ -22,16 +22,18 @@
       "case_id": "case-01",
       "judge_count": 1,
       "code_commit": "5a7ac3fc83c1",
+      "env_commit": "351c1920704e",
+      "objective_source": "cached",
       "integrity_ok": true,
       "not_implemented": false,
-      "firstPaintMs": 166.7,
+      "firstPaintMs": 258.0,
       "endToEndMin": 49.7,
       "total_tokens": null,
       "A": 20.3,
       "B": 7.38,
       "C": 20.01,
-      "D": 26.4,
-      "total": 74.09,
+      "D": 26.8,
+      "total": 74.49,
       "A1": 2.0,
       "A2": 8.22,
       "A3": 4.33,
@@ -41,25 +43,25 @@
       "C1": 4.04,
       "C2": 7.97,
       "C3": 8.0,
-      "D1": 8.7,
-      "D2": 9.1,
-      "D3": 8.6
+      "D1": 9.3,
+      "D2": 9.2,
+      "D3": 8.3
     }
   ],
   "mean": {
     "A": 20.3,
     "B": 7.38,
     "C": 20.01,
-    "D": 26.4,
-    "total": 74.09,
+    "D": 26.8,
+    "total": 74.49,
     "B1": 3.38,
     "B2": 4.0,
     "C1": 4.04,
     "C2": 7.97,
     "C3": 8.0,
-    "D1": 8.7,
-    "D2": 9.1,
-    "D3": 8.6
+    "D1": 9.3,
+    "D2": 9.2,
+    "D3": 8.3
   },
   "range_half": {
     "A": 0.0,
