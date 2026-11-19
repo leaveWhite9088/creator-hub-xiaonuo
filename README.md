@@ -30,7 +30,7 @@
 | **A 异步韧性与耦合工作台** | **30** | **无头浏览器第一波剧本 + 连环过关门控自动算分**：<br>• `A1` 零外网离线连通、`mock_backend.js` SHA-256 完整性、异步接口真实调用与四项目/四富长文渲染（2.0）<br>• `A2 连环链` 异步多词交集检索与慢快请求乱序防倒灌 → 筛选/排序/详情取消收藏同步 → 双项对比与零重叠原生 `<svg>` 多维图 → 增至 3 项动态重绘与上限拦截（9.5）<br>• `A3 连环链` 异步测算单调重算与快速重置防旧报价倒灌 → 去剧透忙闲冲突识别与短/长跨度（含 6 周方案）排期消解 → 跨模块 Undo/Redo 栈及输入框防劫持 → 耦合非破坏带入、15ms 防并发连点锁与 `503` 瞬时故障恢复生成真实回执（12.0）<br>• `A4 连环链` 双异步深链接刷新与新窗口直达 → 快速切篇防旧详情倒灌与五步连续历史栈 → 长文目录真实滚动防遮挡定位（6.5） |
 | **B 高压性能与开发效率** | **15** | **脚本自动算分（以 A 层得分率作为上限乘数封顶）**：<br>• `B1` 离线首屏耗时、320 卡片高压注入搜索 `P95`、长文滚动帧间隔与空闲无限 `rAF` 惩罚 `-40%`（5）<br>• `B2` 开局 `t0` 至打包冻结 `t1` 端到端真实墙钟耗时（免去编造文案负担后：18 分钟内满分，此后每 24 分钟减半）（10） |
 | **C 严苛物理可用性底线** | **25** | **无头浏览器第二、三波剧本物理测量算分**：<br>• `C1` 四档视口（首页/表格长文/SVG 对比面板）反 `overflow:hidden` 截断、320px 超长串抗撑破、动态对比条防遮挡与热区留白（9）<br>• `C2` 六区键盘可达、定制 `:focus-visible` 焦点环、**对比弹层双向焦点锁（`Tab`+`Shift+Tab`）与 `Escape` 归位**（8）<br>• `C3` 多态脏 JSON/`SecurityError`/`QuotaExceededError`/剪贴板降级与**深浅 9 角色陡峭 WCAG AA 木桶对比度**（8） |
-| **D 视觉美学与工程思想** | **30** | **独立评委审阅《12 张连环画 + 脱敏源码》盲评（追加写入中心日志）**：<br>• `D1` 视觉排版质感、零重叠 SVG 图表层次与长文阅读心流（11）<br>• `D2` 异步过渡体验、自发排期冲突消解、跨模块撤销重做与 `503` 容错体贴度（10）<br>• `D3` 异步竞态控制架构、模块解耦可维护性与 `DECISIONS.md` 五条声明逐行核验（9） |
+| **D 视觉美学与工程思想** | **30** | **独立评委审阅《12 张连环画 + 脱敏源码》盲评（追加写入中心日志，零自述包装）**：<br>• `D1` 视觉设计质感与信息层级（10）<br>• `D2` 开放痛点的自发交互巧思与体贴度（10）<br>• `D3` 代码简洁度、高内聚架构与异步防竞态状态机质量（10） |
 
 ---
 
@@ -39,7 +39,7 @@
 ```sh
 # 阶段一：被测试者（选手）开局、对接只读 mock_backend.js 开发、冒烟自检与匿名连环画打包
 python tools/start_run.py --model Demo
-# -> 在 runs/Demo/workspace/ 内阅读 TASK.md 与 CONTRACT.md 完成前端开发（严禁修改 mock_backend.js）并填写 DECISIONS.md
+# -> 在 runs/Demo/workspace/ 内阅读 TASK.md 与 CONTRACT.md 完成前端开发（严禁修改 mock_backend.js）
 python runs/Demo/workspace/smoke_public.py
 python src/scoring/judge_pack.py --model Demo
 # -> 校验 mock_backend.js 原件哈希，冻结 t1 与代码 SHA-256 承诺，自动抓拍 12 张连环画（S01..S12）生成 leaderboard/blind/<pack_id>/
@@ -48,8 +48,8 @@ python src/scoring/judge_pack.py --model Demo
 python src/scoring/judge_submit.py \
   --pack-dir leaderboard/blind/<pack_id> --case-id case-01 \
   --judge-id judge-01 --judge-model claude-opus-4 \
-  --D1 10.2 --D2 9.5 --D3 8.5 \
-  --evidence "[S03][S07][S08][S10] SVG零重叠+14周连续空闲顺延+耦合带入+503退避回执生成 + [code/app.js] C1-C5全核实" \
+  --D1 9.2 --D2 9.5 --D3 9.0 \
+  --evidence "[S03][S07][S08][S10] SVG零重叠+14周连续空闲顺延+耦合带入+503退避回执生成 + [code/app.js] 架构高内聚" \
   --note "最强反证：移动端长文目录置于正文上方未支持一键折叠收起"
 
 # 阶段三：盲评全部收齐后，执行隔离/时间审计并一键拉起三波浏览器剧本定稿出榜
@@ -65,7 +65,7 @@ python leaderboard/finalize.py
 ```text
 AGENTS.md                两角色（被测试者 / 独立评委）一进门即懂的操作规范与隔离红线
 configs/benchmark.json   全局唯一配置源（连环门控阈值、A/B/C/D 权重、陡峭对比度与反截断节点、B2 时间常数）
-src/sandbox_template/    选手开局释放的沙盒模板（含官方只读 mock_backend.js、TASK.md、CONTRACT.md、DECISIONS.md、index.html、smoke_public.py）
+src/sandbox_template/    选手开局释放的沙盒模板（含官方只读 mock_backend.js、TASK.md、CONTRACT.md、index.html、smoke_public.py）
 src/baselines/           双基线自检内置样本（naive_baseline 简陋异步弱实现 / golden_baseline 社论级防竞态黄金工作台基线，选手禁读）
 src/scoring/             三波连环压测引擎（browser_waves.py + dom_probes.py）、12 图连环画（storyboard.py）、插值门控与汇总出榜
 tools/                   开局工具（start_run.py）、评委靶向补测（judge_probe.py）、隔离审计（isolation_audit.py）与时间审计（timing_audit.py）

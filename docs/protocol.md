@@ -20,12 +20,11 @@
 
 每个匿名包 `leaderboard/blind/<pack_id>/` 包含：
 - `README.md`：三步取证盲评指引与隔离红线；
-- `RUBRIC.md`：D1（11分）、D2（10分）、D3（9分）详细锚点、视觉审美定档与硬伤重扣铁律；
+- `RUBRIC.md`：D1（10分）、D2（10分）、D3（10分）详细锚点、视觉审美定档与硬伤重扣铁律；
 - `SUBMIT.md`：当前盲评包专属提交命令模板；
 - `pack.json`：包清单元数据（`schema_version: 2`）；
-- `case-XX/OVERVIEW.md`：脱敏代码文件清单、行数统计与说明文档填写状态；
+- `case-XX/OVERVIEW.md`：脱敏代码文件清单与行数统计；
 - `case-XX/STORYBOARD.md` + `case-XX/storyboard/S01..S12.png`：替身体验官自动抓拍的 **12 张《交互状态连环画》**（覆盖首屏质感、列表滚动恢复、SVG 多维对比面板、空搜索恢复、桌面/窄屏表格代码长文、顾问排期冲突告警、去剧透冲突顺延、耦合非破坏带入、异步提交 `503` 恢复与 `INQ-2026-` 回执 + 100ms 复制反馈、深色模式与窄屏悬浮对比条）及纯物理事实批注；
-- `case-XX/DECISIONS.md`：脱敏后的《交互设计与工程维护说明》；
 - `case-XX/code/*`：脱敏后的完整离线网页文件与官方原件 `mock_backend.js`。
 
 **靶向补测规约**：
