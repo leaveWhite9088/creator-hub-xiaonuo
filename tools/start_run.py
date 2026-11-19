@@ -5,7 +5,7 @@
 用法：
     python tools/start_run.py --model <模型标识> [--t0 <ISO时间>] [--force]
 
-执行后将在 runs/<模型标识>/workspace/ 下生成选手专属沙盒（含 TASK.md、CONTRACT.md、DECISIONS.md 与 smoke_public.py）。
+执行后将在 runs/<模型标识>/workspace/ 下生成选手专属沙盒（含 TASK.md、CONTRACT.md 与 smoke_public.py）。
 被测试者随后应立即进入该沙盒目录开展工作，严禁读取上级评测实现或其他运行目录。
 """
 from __future__ import annotations
@@ -214,9 +214,8 @@ def main() -> int:
     print("  2. 只阅读沙盒内的 TASK.md（开发提示词）与 CONTRACT.md（离线打开与基础 data-testid 契约）")
     print("  3. 在沙盒内完成 index.html（及可选本地样式/脚本文件）开发，确保断网双击直开")
     print(f"  4. 运行公开连通性冒烟检查：python {workspace_dir / 'smoke_public.py'}")
-    print("  5. 如实填写沙盒内的 DECISIONS.md（《交互设计与维护说明》）")
-    print(f"  6. 在 {run_dir / 'token_usage.json'} 填入词元消耗自报记录")
-    print(f"  7. 收工冻结计时并抓拍连环画生成匿名包：python src/scoring/judge_pack.py --model {run_name}")
+    print(f"  5. 在 {run_dir / 'token_usage.json'} 填入词元消耗自报记录")
+    print(f"  6. 收工冻结计时并抓拍连环画生成匿名包：python src/scoring/judge_pack.py --model {run_name}")
     print("【隔离红线】严禁读取 docs/、configs/、src/、leaderboard/、构建与设计说明.md 或其他 runs/ 目录！")
     print("================================================================")
     return 0
