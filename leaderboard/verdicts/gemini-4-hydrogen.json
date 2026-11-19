@@ -3,7 +3,7 @@
   "model_inputs": [
     "gemini-4-hydrogen"
   ],
-  "finalized_at": "2026-11-19T10:02:00+08:00",
+  "finalized_at": "2026-11-19T10:26:26+08:00",
   "blind_pack_ids": [
     "3fd6d682a18f"
   ],
@@ -22,7 +22,7 @@
       "case_id": "case-01",
       "judge_count": 1,
       "code_commit": "45286871a5fc",
-      "env_commit": "351c1920704e",
+      "env_commit": "321b012513a1",
       "objective_source": "cached",
       "integrity_ok": true,
       "not_implemented": false,

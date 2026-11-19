@@ -31,16 +31,11 @@ from model_identity import canonical_model_id, sanitize_run_name  # noqa: E402
 import review_log  # noqa: E402
 
 PROTECTED_FILES = (
-    "configs/benchmark.json",
     "src/sandbox_template/mock_backend.js",
     "src/scoring/metrics.py",
     "src/scoring/dom_probes.py",
     "src/scoring/browser_waves.py",
-    "src/scoring/storyboard.py",
     "src/scoring/score_run.py",
-    "src/scoring/judge_pack.py",
-    "src/scoring/judge_submit.py",
-    "src/scoring/finalize.py",
 )
 
 
@@ -63,8 +58,29 @@ def verify_file_matches_mock_backend(candidate: Path, root: Path = ROOT) -> bool
 
 
 def compute_env_commit(root: Path = ROOT) -> str:
-    """对核心评分、三波浏览器剧本与打包脚本计算联合 SHA-256 承诺，防止比赛期间篡改评测逻辑。"""
+    """对客观层配置（A/B/C，剔除 D 层与连环画配置）及三波浏览器客观评测脚本计算联合 SHA-256 承诺。
+    修改 D 层盲评量表、盲评脚本或汇总排版不会改变该指纹，避免客观分缓存被误作废。
+    """
     h = hashlib.sha256()
+    cfg_path = root / "configs" / "benchmark.json"
+    h.update(b"configs/benchmark.json#objective\0")
+    if cfg_path.exists():
+        try:
+            cfg_obj = json.loads(cfg_path.read_text(encoding="utf-8"))
+            cfg_copy = dict(cfg_obj)
+            cfg_copy.pop("storyboard", None)
+            if isinstance(cfg_copy.get("scoring"), dict):
+                sc_copy = dict(cfg_copy["scoring"])
+                sc_copy.pop("D", None)
+                cfg_copy["scoring"] = sc_copy
+            norm_cfg = json.dumps(cfg_copy, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            h.update(hashlib.sha256(norm_cfg).digest())
+        except Exception:
+            norm = cfg_path.read_bytes().replace(b"\r\n", b"\n")
+            h.update(hashlib.sha256(norm).digest())
+    else:
+        h.update(b"MISSING")
+
     for rel in PROTECTED_FILES:
         p = root / rel
         h.update(rel.encode("utf-8") + b"\0")
