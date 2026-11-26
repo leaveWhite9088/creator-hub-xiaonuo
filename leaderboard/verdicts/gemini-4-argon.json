@@ -1,0 +1,81 @@
+{
+  "model": "gemini-4-argon",
+  "model_inputs": [
+    "gemini-4-argon"
+  ],
+  "finalized_at": "2026-11-24T12:11:07+08:00",
+  "blind_pack_ids": [
+    "3129bc2e6f36"
+  ],
+  "review_log": "E:\\easyz工作室\\评测产品\\creator-hub-xiaonuo\\leaderboard\\reviews.jsonl",
+  "d_source": "review_log",
+  "d_aggregate": "mean",
+  "summary": {
+    "runs_total": 1,
+    "runs_scored": 1,
+    "judge_reviews": 1
+  },
+  "runs": [
+    {
+      "run": "gemini-4-argon",
+      "pack_id": "3129bc2e6f36",
+      "case_id": "case-01",
+      "judge_count": 1,
+      "code_commit": "9b421907602f",
+      "env_commit": "321b012513a1",
+      "objective_source": "cached",
+      "integrity_ok": true,
+      "not_implemented": false,
+      "firstPaintMs": 166.8,
+      "endToEndMin": 10.5,
+      "total_tokens": null,
+      "A": 13.76,
+      "B": 6.88,
+      "C": 21.78,
+      "D": 22.6,
+      "total": 65.02,
+      "A1": 1.89,
+      "A2": 2.16,
+      "A3": 4.33,
+      "A4": 5.38,
+      "B1": 2.29,
+      "B2": 4.59,
+      "C1": 6.18,
+      "C2": 8.0,
+      "C3": 7.6,
+      "D1": 8.2,
+      "D2": 7.4,
+      "D3": 7.0
+    }
+  ],
+  "mean": {
+    "A": 13.76,
+    "B": 6.88,
+    "C": 21.78,
+    "D": 22.6,
+    "total": 65.02,
+    "B1": 2.29,
+    "B2": 4.59,
+    "C1": 6.18,
+    "C2": 8.0,
+    "C3": 7.6,
+    "D1": 8.2,
+    "D2": 7.4,
+    "D3": 7.0
+  },
+  "range_half": {
+    "A": 0.0,
+    "B": 0.0,
+    "C": 0.0,
+    "D": 0.0,
+    "total": 0.0,
+    "B1": 0.0,
+    "B2": 0.0,
+    "C1": 0.0,
+    "C2": 0.0,
+    "C3": 0.0,
+    "D1": 0.0,
+    "D2": 0.0,
+    "D3": 0.0
+  }
+}
